@@ -576,6 +576,14 @@ function proposeTransactionSim(to, valueEth, erc20Amount, data = "0x") {
 
     const txId = transactions.length;
     
+    // Estimate initial gas cost for UI display
+    let estimatedGas = 21000;
+    if (erc20Amount > 0) {
+        estimatedGas = erc20Amount > TIME_LOCK_THRESHOLD_USDC ? 94320 : 64250;
+    } else if (valueEth > 0) {
+        estimatedGas = 42320;
+    }
+
     const newTx = {
         id: txId,
         to: to,
@@ -585,7 +593,8 @@ function proposeTransactionSim(to, valueEth, erc20Amount, data = "0x") {
         executed: false,
         confirmations: {},
         confirmationCount: 1,
-        timeLockStart: 0
+        timeLockStart: 0,
+        gasCost: estimatedGas.toLocaleString() + " (Est.)"
     };
 
     newTx.confirmations[sender.address] = true;
@@ -709,6 +718,7 @@ function executeTransactionSim(txId) {
     }
 
     tx.executed = true;
+    tx.gasCost = gasSpent.toLocaleString() + " (Actual)";
     
     logToConsole(`[Event Emit] TxExecuted(txId=${txId}, executor=${sender.address.slice(0, 8)}...)`, 'event');
     logToConsole(`[Success] Tx #${txId} executed successfully! Gas spent: ${gasSpent}`, 'success');
@@ -869,6 +879,10 @@ function updateUI() {
                         <div class="detail-item">
                             <span class="detail-label">Calldata Payload</span>
                             <span class="detail-val address">${tx.data}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Gas Consumed</span>
+                            <span class="detail-val" style="color: #e879f9; font-weight: 600;">⚡ ${tx.gasCost}</span>
                         </div>
                     </div>
                     <div class="tx-confirmers">
