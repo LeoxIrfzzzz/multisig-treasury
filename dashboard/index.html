@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aetheris MultiSig Treasury | Engineered by Mohammed Irfaan</title>
+    <!-- Modern Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Ambient Light Glow Backgrounds -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">Æ</div>
+                <div class="logo-text">
+                    <h1>AETHERIS</h1>
+                    <p class="tagline">MultiSig Treasury & Yield Router</p>
+                </div>
+            </div>
+            
+            <!-- Tab Controls -->
+            <nav class="header-tabs">
+                <button class="tab-btn active" data-tab="dashboard">Treasury Sandbox</button>
+                <button class="tab-btn" data-tab="security">Multisig Safety</button>
+                <button class="tab-btn" data-tab="stepper">Transaction Stepper</button>
+                <button class="tab-btn" data-tab="contracts">Smart Contracts</button>
+            </nav>
+
+            <div class="right-header">
+                <div class="developer-badge">
+                    <span class="badge-icon">🛠️</span>
+                    <span class="badge-text">Built by Mohammed Irfaan</span>
+                </div>
+                <div class="system-status">
+                    <span class="status-indicator"></span>
+                    <span class="status-text">EVM Sandbox</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT -->
+        
+        <!-- TAB 1: TREASURY DASHBOARD SANDBOX -->
+        <div class="tab-content active" id="tab-dashboard">
+            <div class="app-grid">
+                <!-- LEFT PANEL: STATS & CONTROLS -->
+                <section class="left-panel">
+                    <!-- TREASURY ASSETS CARD -->
+                    <div class="glass-card stats-card">
+                        <h2 class="section-title">Treasury Asset Accounting</h2>
+                        
+                        <div class="balance-display">
+                            <span class="currency-symbol">$</span>
+                            <span class="balance-value" id="combined-balance">25,000.00</span>
+                            <span class="currency-code">USDC</span>
+                        </div>
+                        <p class="balance-label">Total Combined Capital Managed</p>
+
+                        <hr class="divider">
+
+                        <div class="accounting-breakdown">
+                            <div class="accounting-row">
+                                <div class="row-label">
+                                    <span class="bullet liquid"></span>
+                                    Liquid in Treasury
+                                </div>
+                                <div class="row-value"><span id="treasury-liquid">25,000.00</span> USDC</div>
+                            </div>
+                            <div class="accounting-row">
+                                <div class="row-label">
+                                    <span class="bullet yield"></span>
+                                    Yield Vault Shares
+                                </div>
+                                <div class="row-value"><span id="vault-assets">0.00</span> USDC</div>
+                            </div>
+                            <div class="accounting-row">
+                                <div class="row-label">
+                                    <span class="bullet interest"></span>
+                                    Virtual Yield Accrued
+                                </div>
+                                <div class="row-value text-success">+<span id="yield-earned">0.00</span> USDC</div>
+                            </div>
+                        </div>
+
+                        <!-- Faucet & Accrue Actions -->
+                        <div class="quick-actions">
+                            <button id="btn-faucet" class="btn btn-secondary btn-sm" title="Mint +10,000 USDC into the Treasury contract balance">
+                                🚰 Faucet +10,000 USDC
+                            </button>
+                            <button id="btn-accrue" class="btn btn-success-outline btn-sm" title="Simulates a vault interest payout, expanding yield balances by 5%">
+                                ⚡ Accrue 5% Yield
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ACTIVE OWNER WALLET PRANK -->
+                    <div class="glass-card active-owner-card">
+                        <h2 class="section-title">Active Wallet Prank</h2>
+                        <p class="card-desc">Simulate execution transactions as different registered multisig owners:</p>
+                        
+                        <div class="owner-selector" id="owner-selector">
+                            <div class="owner-option active" data-owner-idx="0">
+                                <div class="owner-avatar o1">O1</div>
+                                <div class="owner-info">
+                                    <span class="owner-name">Owner 1 (Proposer)</span>
+                                    <span class="owner-address">0x111...d33</span>
+                                </div>
+                            </div>
+                            <div class="owner-option" data-owner-idx="1">
+                                <div class="owner-avatar o2">O2</div>
+                                <div class="owner-info">
+                                    <span class="owner-name">Owner 2</span>
+                                    <span class="owner-address">0x222...e44</span>
+                                </div>
+                            </div>
+                            <div class="owner-option" data-owner-idx="2">
+                                <div class="owner-avatar o3">O3</div>
+                                <div class="owner-info">
+                                    <span class="owner-name">Owner 3</span>
+                                    <span class="owner-address">0x333...f55</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- YIELD DEPOSIT CONTROL -->
+                    <div class="glass-card yield-control-card">
+                        <h2 class="section-title">Idle Capital Yield Router</h2>
+                        
+                        <div class="capital-metric">
+                            <div class="metric-header">
+                                <span>Liquid vs. Max Idle Limit</span>
+                                <span>Limit: <strong id="metric-limit">5,000 USDC</strong></span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="idle-progress" style="width: 100%;"></div>
+                            </div>
+                            <div class="metric-footer">
+                                <span>Current: <span id="current-liquid-metric">25,000</span> USDC</span>
+                                <span id="idle-status" class="status-warning">Surplus available!</span>
+                            </div>
+                        </div>
+
+                        <button id="btn-deposit-idle" class="btn btn-primary btn-block glow-animation">
+                            🚀 depositIdleFunds()
+                        </button>
+                        <p class="btn-caption">Publicly callable: transfers surplus above 5,000 USDC into the ERC-4626 vault.</p>
+                    </div>
+                </section>
+
+                <!-- RIGHT PANEL: TRANSACTION FLOW -->
+                <section class="right-panel">
+                    <!-- PROPOSE TRANSACTION FORM -->
+                    <div class="glass-card propose-card">
+                        <h2 class="section-title">Propose MultiSig Transaction</h2>
+                        <form id="propose-form" class="propose-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="tx-recipient">Recipient Address (To)</label>
+                                    <input type="text" id="tx-recipient" placeholder="e.g. 0xABC...22b" value="0xABC1234567890abcdef1234567890abcdef12345" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tx-erc20">USDC Amount (ERC-20)</label>
+                                    <input type="number" id="tx-erc20" placeholder="e.g. 15000" value="12000" min="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tx-eth">Native Ether Amount (Value)</label>
+                                    <input type="number" id="tx-eth" placeholder="e.g. 0" value="0" min="0" step="any" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tx-data">Calldata (Bytes - Hex)</label>
+                                    <input type="text" id="tx-data" placeholder="0x..." value="0x">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">Propose New Transaction</button>
+                        </form>
+                    </div>
+
+                    <!-- TRANSACTION QUEUE / TIMELINE -->
+                    <div class="glass-card queue-card">
+                        <h2 class="section-title">Governance Transaction Queue</h2>
+                        <div class="tx-list-empty" id="tx-list-empty" style="display: none;">
+                            <div class="empty-icon">📁</div>
+                            <p>No transactions proposed yet. Make a proposal above!</p>
+                        </div>
+                        <div class="tx-timeline" id="tx-timeline">
+                            <!-- Interactive transactions inserted dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- LIVE BLOCK EXPLORER LOGS -->
+                    <div class="glass-card explorer-card">
+                        <div class="explorer-header">
+                            <h2 class="section-title">EVM Event Explorer & Console Logs</h2>
+                            <button id="btn-clear-logs" class="btn btn-outline btn-xs">Clear logs</button>
+                        </div>
+                        <div class="terminal-window">
+                            <div class="terminal-header">
+                                <span class="dot-btn red"></span>
+                                <span class="dot-btn yellow"></span>
+                                <span class="dot-btn green"></span>
+                                <span class="terminal-title">EVM Sandbox Console - Compiler version: 0.8.20+commit.a1b2c3d4</span>
+                            </div>
+                            <div class="terminal-body" id="terminal-logs">
+                                <!-- Logs stream here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- TAB 2: MULTISIG SAFETY & AUDIT REPORT -->
+        <div class="tab-content" id="tab-security">
+            <div class="security-portal">
+                <div class="glass-card hero-security-card">
+                    <div class="badge-accent">🛡️ SECURITY & COMPLIANCE ARCHITECTURE</div>
+                    <h2>Multi-Signature Safety & Custodial Cryptographic Integrity</h2>
+                    <p class="hero-desc">An in-depth analysis of the threat models, mathematical invariants, and security vectors managed by this system, engineered to safeguard enterprise assets.</p>
+                </div>
+
+                <div class="security-grid">
+                    <!-- Column 1 -->
+                    <div class="glass-card sec-detail-card">
+                        <div class="sec-card-header">
+                            <span class="sec-icon purple">🔑</span>
+                            <h3>M-of-N Cryptographic Sharding</h3>
+                        </div>
+                        <p class="sec-body">The core multi-signature consensus prevents single-point-of-failure vulnerabilities. Operating on an M-of-N (e.g., 2-of-3) execution model, the system forces cryptographic redundancy. If a hot wallet is hacked or an private key is stolen, the attacker is mathematically locked out. To drain funds, they must compromise a quorum of distinct keys simultaneously.</p>
+                        <div class="sec-stat-pill">Consensus Invariant: confirmations &ge; threshold</div>
+                    </div>
+
+                    <div class="glass-card sec-detail-card">
+                        <div class="sec-card-header">
+                            <span class="sec-icon amber">⏳</span>
+                            <h3>Time-Lock Delay Countermeasures</h3>
+                        </div>
+                        <p class="sec-body">Large transaction transfers exceeding the <code>TIME_LOCK_THRESHOLD</code> trigger an immutable countdown timer. During this 2-day period, funds are held in state-suspension. This delay serves as an essential protective measure, allowing the treasury owners to detect unauthorized proposals and revoke confirmation approvals, canceling the lock before execution can occur.</p>
+                        <div class="sec-stat-pill">Time Invariant: block.timestamp &ge; start + delay</div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="glass-card sec-detail-card">
+                        <div class="sec-card-header">
+                            <span class="sec-icon green">📈</span>
+                            <h3>Yield Isolation & Capital Partition</h3>
+                        </div>
+                        <p class="sec-body">Keeping high liquid balances inside a multi-sig increases systemic exposure. Aetheris resolves this by deploying idle funds into an ERC-4626 vault. Operational liquid capital is capped strictly at 5,000 USDC. Bulk assets remain secured and yield-accruing in the tokenized vault, isolated from hot operational activities yet readily available via the synchronous deficit routing mechanism.</p>
+                        <div class="sec-stat-pill">Yield Rule: Treasury Balance &le; Max Idle Threshold</div>
+                    </div>
+
+                    <div class="glass-card sec-detail-card">
+                        <div class="sec-card-header">
+                            <span class="sec-icon red">⚡</span>
+                            <h3>Checks-Effects-Interactions (CEI)</h3>
+                        </div>
+                        <p class="sec-body">To defeat reentrancy attacks, the treasury contract commits state updates prior to performing external contract calls. The transaction status is marked <code>executed = true</code> in storage before calling the vault withdrawal or sending ERC-20/native assets. If a malicious smart contract reenters <code>executeTransaction</code>, the call reverts immediately.</p>
+                        <div class="sec-stat-pill">Solidity Modifier: nonReentrant (ReentrancyGuard)</div>
+                    </div>
+                </div>
+
+                <!-- Attack Vector Table -->
+                <div class="glass-card threat-model-card">
+                    <h2 class="section-title">Cryptographic Threat Modeling & Defense Vectors</h2>
+                    <div class="table-container">
+                        <table class="security-table">
+                            <thead>
+                                <tr>
+                                    <th>Attack Vector</th>
+                                    <th>Threat Severity</th>
+                                    <th>Description & Impact</th>
+                                    <th>Aetheris Defense Protocol</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Hot-Wallet Key Compromise</strong></td>
+                                    <td class="severity high">CRITICAL</td>
+                                    <td>A single owner private key is compromised via phishing, malware, or server penetration.</td>
+                                    <td><strong>Quorum Enforcement:</strong> Execution requires distinct signature confirmations from separate addresses. Attackers cannot execute transactions with only 1 compromised key.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Quorum Hostile Takeover</strong></td>
+                                    <td class="severity medium">HIGH</td>
+                                    <td>An attacker compromises the minimum threshold of keys (e.g. 2 keys) and proposes a massive transfer.</td>
+                                    <td><strong>Time-Lock Delays:</strong> Transactions exceeding 10,000 USDC trigger a mandatory 2-day delay. Remaining owners can revoke approvals and cancel the transaction before execution.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Reentrancy Exploit</strong></td>
+                                    <td class="severity high">CRITICAL</td>
+                                    <td>A receiver contract calls back into <code>executeTransaction</code> before the first call completes to drain funds.</td>
+                                    <td><strong>CEI & Mutex Guard:</strong> Storage is updated prior to contract calls, and OpenZeppelin's reentrancy mutex blocks nested execution.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>USDC Blocklists / Vault Lock</strong></td>
+                                    <td class="severity low">MEDIUM</td>
+                                    <td>Centralized stablecoin issues freeze treasury or vault address, locking capital.</td>
+                                    <td><strong>Dynamic Deficit Checking:</strong> Deficits are withdrawn dynamically. The treasury handles ERC-20 approvals and transfers via OpenZeppelin's robust <code>SafeERC20</code>.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: TRANSACTION TIMELINE STEPPER -->
+        <div class="tab-content" id="tab-stepper">
+            <div class="stepper-portal">
+                <div class="glass-card hero-stepper-card">
+                    <div class="badge-accent">🔄 TRANSACTION LIFECYCLE STEPPER</div>
+                    <h2>The Cryptographic Lifecycle of a Treasury Transaction</h2>
+                    <p class="hero-desc">Click through each phase of the interactive stepper below to inspect how Aetheris securely coordinates consensus, time-locks, and capital routing on the Ethereum virtual machine.</p>
+                </div>
+
+                <!-- Stepper Progress Tracker -->
+                <div class="glass-card stepper-timeline-card">
+                    <div class="interactive-stepper" id="visual-stepper">
+                        <div class="step-indicator active" data-step="1">
+                            <div class="step-num">1</div>
+                            <div class="step-lbl">Proposal</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-indicator" data-step="2">
+                            <div class="step-num">2</div>
+                            <div class="step-lbl">Approvals</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-indicator" data-step="3">
+                            <div class="step-num">3</div>
+                            <div class="step-lbl">Time-Lock</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-indicator" data-step="4">
+                            <div class="step-num">4</div>
+                            <div class="step-lbl">Yield Routing</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step-indicator" data-step="5">
+                            <div class="step-num">5</div>
+                            <div class="step-lbl">Final Settlement</div>
+                        </div>
+                    </div>
+
+                    <!-- Step Context Blocks -->
+                    <div class="step-description-area" id="step-description-area">
+                        <!-- Content loaded dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: SMART CONTRACT SOURCE CODE VIEWER -->
+        <div class="tab-content" id="tab-contracts">
+            <div class="contracts-portal">
+                <div class="glass-card contracts-header-card">
+                    <div class="contracts-header-layout">
+                        <div>
+                            <div class="badge-accent">💻 FORGE COMPLIANT SOLIDITY CODEBASE</div>
+                            <h2>Audit and Inspect the Smart Contracts</h2>
+                            <p class="hero-desc">Select any Solidity file from the codebase below to view its complete production implementation. Designed, written, and optimized by <strong>Mohammed Irfaan</strong>.</p>
+                        </div>
+                        <div class="selector-container">
+                            <label for="contract-selector">Select File:</label>
+                            <select id="contract-selector" class="contract-dropdown">
+                                <option value="MultiSigTreasury.sol">MultiSigTreasury.sol (Core Logic)</option>
+                                <option value="IMockVault.sol">IMockVault.sol (ERC-4626 Vault Interface)</option>
+                                <option value="MultiSigTreasury.t.sol">MultiSigTreasury.t.sol (Foundry Tests)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Display Box -->
+                <div class="glass-card code-display-card">
+                    <div class="code-header">
+                        <span class="file-name" id="selected-file-label">MultiSigTreasury.sol</span>
+                        <button class="btn btn-outline btn-xs" id="btn-copy-code">Copy File Content</button>
+                    </div>
+                    <pre class="code-pre"><code class="code-box" id="solidity-code-box">
+<!-- Solidity code loads here dynamically -->
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="app-footer">
+            <div class="footer-layout">
+                <div class="footer-left">
+                    <p><strong>Aetheris MultiSig Web3 Suite</strong> &bull; Production-Grade Custodial Security</p>
+                    <p class="sub-credit">Designed and Engineered by <strong>Mohammed Irfaan</strong> &bull; Principal Web3 Architect & Senior Solidity Engineer</p>
+                </div>
+                <div class="footer-right">
+                    <span class="git-pill">Foundry Enabled</span>
+                    <span class="git-pill">ERC-4626 Compliant</span>
+                    <span class="git-pill">MIT License</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Application Script Logic -->
+    <script src="app.js"></script>
+</body>
+</html>

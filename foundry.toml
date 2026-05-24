@@ -1,0 +1,16 @@
+# Full Foundry Configuration File
+# Lead Architect: Mohammed Irfaan
+
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+test = "test"
+cache_path = "cache"
+solc_version = "0.8.20"
+optimizer = true
+optimizer_runs = 200
+
+# Additional Gas Auditing Reports
+[profile.default.gas_reports]
+enabled = ["*"]
