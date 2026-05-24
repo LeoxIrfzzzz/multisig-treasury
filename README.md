@@ -88,7 +88,7 @@ Aetheris includes a complete, high-fidelity Web3 Single Page Application (SPA) t
 ### How to Open the DApp Locally
 Double-click the HTML file or paste the absolute path below into your favorite browser search bar to play with the sandbox, security audit, stepper, and IDE code views instantly:
 ```text
-file:///c:/Users/leona/OneDrive/Documents/multisig-treasury/dashboard/index.html
+https://leoxirfzzzz.github.io/multisig-treasury/
 ```
 
 ### Simulator Features:
