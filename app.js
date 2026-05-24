@@ -496,6 +496,13 @@ emit TxExecuted(_txId, msg.sender);`,
     }
 ];
 
+// --- SIMULATOR CONSTANTS ---
+const THRESHOLD = 2;
+const TIME_LOCK_DELAY = 172800; // 2 days in seconds
+const TIME_LOCK_THRESHOLD_ETH = 10;
+const TIME_LOCK_THRESHOLD_USDC = 10000;
+const MAX_IDLE_THRESHOLD = 5000;
+
 // --- DASHBOARD SIMULATOR STATES ---
 let treasuryUSDC = 25000.00;
 let vaultShares = 0.00;
