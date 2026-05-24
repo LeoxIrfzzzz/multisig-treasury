@@ -591,10 +591,13 @@ function proposeTransactionSim(to, valueEth, erc20Amount, data = "0x") {
     newTx.confirmations[sender.address] = true;
     transactions.push(newTx);
 
+    // Calculate realistic proposal gas (matches avg 94,320 gas)
+    const gasSpent = Math.floor(Math.random() * 3000) + 91000;
+
     logToConsole(`[Event Emit] TxProposed(txId=${txId}, proposer=${sender.address.slice(0, 8)}..., to=${to.slice(0, 8)}...)`, 'event');
     logToConsole(`[Event Emit] TxConfirmed(txId=${txId}, owner=${sender.address.slice(0, 8)}...)`, 'event');
 
-    logToConsole(`[Success] Tx #${txId} Registered. Pending consensus approvals.`, 'success');
+    logToConsole(`[Success] Tx #${txId} Registered. Pending consensus approvals. Gas spent: ${gasSpent}`, 'success');
     updateUI();
     return true;
 }
@@ -613,16 +616,20 @@ function confirmTransactionSim(txId) {
 
     logToConsole(`[Event Emit] TxConfirmed(txId=${txId}, owner=${sender.address.slice(0, 8)}...)`, 'event');
 
+    let gasSpent = Math.floor(Math.random() * 1500) + 27000; // Standard confirmation gas
+
     // Time-Lock activation check
     if (tx.confirmationCount >= THRESHOLD && tx.timeLockStart === 0) {
         const requiresTimeLock = (tx.value > TIME_LOCK_THRESHOLD_ETH || tx.erc20Amount > TIME_LOCK_THRESHOLD_USDC);
         if (requiresTimeLock) {
             tx.timeLockStart = getEVMTime();
+            gasSpent += Math.floor(Math.random() * 2000) + 12000; // Adds state-writing gas for timeLockStart
             logToConsole(`[Event Emit] TimeLockStarted(txId=${txId}, startTime=${tx.timeLockStart})`, 'event');
             logToConsole(`[Security Control] Delay countdown active. Transaction time-locked.`, 'info');
         }
     }
 
+    logToConsole(`[Success] confirmTransaction() completed. Gas spent: ${gasSpent}`, 'success');
     updateUI();
 }
 
@@ -640,12 +647,16 @@ function revokeConfirmationSim(txId) {
 
     logToConsole(`[Event Emit] ConfirmationRevoked(txId=${txId}, owner=${sender.address.slice(0, 8)}...)`, 'event');
 
+    let gasSpent = Math.floor(Math.random() * 1500) + 14000; // Standard revocation gas
+
     if (tx.confirmationCount < THRESHOLD && tx.timeLockStart !== 0) {
         tx.timeLockStart = 0;
+        gasSpent += 5000; // Storage reset gas/state write overwrite
         logToConsole(`[Event Emit] TimeLockCancelled(txId=${txId})`, 'event');
         logToConsole(`[Security Control] Approvals below threshold. Time-Lock delay reset.`, 'error');
     }
 
+    logToConsole(`[Success] revokeConfirmation() completed. Gas spent: ${gasSpent}`, 'success');
     updateUI();
 }
 
@@ -669,9 +680,13 @@ function executeTransactionSim(txId) {
         }
     }
 
+    let gasSpent = Math.floor(Math.random() * 3000) + 40000; // Base gas (standard Ether transfer / payload call)
+
     // Dynamic Deficit route
     if (tx.erc20Amount > 0) {
         const vaultAssets = vaultShares * exchangeRate;
+        gasSpent += 20000; // Standard ERC-20 transfer base gas
+
         if (treasuryUSDC < tx.erc20Amount) {
             const deficit = tx.erc20Amount - treasuryUSDC;
             
@@ -685,6 +700,8 @@ function executeTransactionSim(txId) {
             vaultShares -= sharesBurned;
             treasuryUSDC += deficit;
 
+            gasSpent += Math.floor(Math.random() * 8000) + 55000; // Substantial vault withdrawal + share burn gas cost
+
             logToConsole(`[Yield Deficit Route] Routed deficit of ${formatUSDC(deficit)} USDC from Yield Vault.`, 'info');
             logToConsole(`[Event Emit] YieldWithdrawn(assets=${formatUSDC(deficit)})`, 'event');
         }
@@ -694,7 +711,7 @@ function executeTransactionSim(txId) {
     tx.executed = true;
     
     logToConsole(`[Event Emit] TxExecuted(txId=${txId}, executor=${sender.address.slice(0, 8)}...)`, 'event');
-    logToConsole(`[Success] Tx #${txId} executed successfully!`, 'success');
+    logToConsole(`[Success] Tx #${txId} executed successfully! Gas spent: ${gasSpent}`, 'success');
 
     updateUI();
 }
